@@ -23,8 +23,8 @@ export class CarInfoController {
     // Initialize Firebase 
       admin.initializeApp({
               credential: admin.credential.cert({
-                projectId: 'scrapcar-bf8b0',
-                clientEmail: 'firebase-adminsdk-fbsvc@scrapcar-bf8b0.iam.gserviceaccount.com',
+                projectId: 'busymors',
+                clientEmail: 'firebase-adminsdk-fbsvc@busymors.iam.gserviceaccount.com',
                 privateKey: process.env.FIREBASE_SECRET.replace(/\\n/g, '\n'),
             }),
         });
