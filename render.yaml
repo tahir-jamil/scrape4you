@@ -2,7 +2,7 @@ services:
   - type: web
     name: scrape4you-backend
     runtime: node
-    buildCommand: npm install && npm run build:backend
+    buildCommand: npm install --include=dev && npm run build:backend
     startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
