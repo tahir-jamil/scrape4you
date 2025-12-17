@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: scrape4you-backend
+    runtime: node
+    buildCommand: npm install && npm run build:backend
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLIC_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: DVLA_MAIN_URL
+        sync: false
+      - key: DVLA_MAIN_KEY
+        sync: false
+      - key: DVLA_API_KEY
+        sync: false
+      - key: DVLA_CLIENT_ID
+        sync: false
+      - key: DVLA_CLIENT_SECRET
+        sync: false
+      - key: DVLA_SCOPE
+        sync: false
+      - key: DVLA_ACCESS_TOKEN_URL
+        sync: false
+      - key: AWS_ACCESS_KEY
+        sync: false
+      - key: AWS_SECRET_KEY
+        sync: false
+      - key: AWS_REGION
+        sync: false
+      - key: AWS_BUCKET_NAME
+        sync: false
+      - key: AWS_BUCKET_NAME_PROFILE
+        sync: false
+      - key: FIREBASE_SECRET
+        sync: false
