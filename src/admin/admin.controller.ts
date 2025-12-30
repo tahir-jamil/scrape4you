@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UnauthorizedException, } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, Get, Query, BadRequestException } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import * as bcrypt from 'bcrypt';
 
@@ -33,5 +33,57 @@ export class AdminController{
             admin: {email: admin.email, id: admin._id}
         }
 
+    }
+
+    // Get all users with pagination
+    @Get('users')
+    async getAllUsers(
+        @Query('page') page: string = '1',
+        @Query('limit') limit: string = '10',
+        @Query('search') search?: string,
+    ) {
+        const pageNum = parseInt(page, 10) || 1;
+        const limitNum = parseInt(limit, 10) || 10;
+        
+        return this.adminService.getAllUsers(pageNum, limitNum, search);
+    }
+
+    // Get all cars with pagination
+    @Get('cars')
+    async getAllCars(
+        @Query('page') page: string = '1',
+        @Query('limit') limit: string = '10',
+        @Query('search') search?: string,
+        @Query('tag') tag?: string, // Filter by 'scrap' or 'salvage'
+    ) {
+        const pageNum = parseInt(page, 10) || 1;
+        const limitNum = parseInt(limit, 10) || 10;
+        
+        return this.adminService.getAllCars(pageNum, limitNum, search, tag);
+    }
+
+    // Combined endpoint - pass type=users or type=cars
+    @Get('data')
+    async getDataByType(
+        @Query('type') type: 'users' | 'cars',
+        @Query('page') page: string = '1',
+        @Query('limit') limit: string = '10',
+        @Query('search') search?: string,
+        @Query('tag') tag?: string,
+    ) {
+        if (!type) {
+            throw new BadRequestException('Type parameter is required. Use "users" or "cars"');
+        }
+        
+        const pageNum = parseInt(page, 10) || 1;
+        const limitNum = parseInt(limit, 10) || 10;
+        
+        return this.adminService.getDataByType(type, pageNum, limitNum, search, tag);
+    }
+
+    // Dashboard statistics
+    @Get('stats')
+    async getDashboardStats() {
+        return this.adminService.getDashboardStats();
     }
 }

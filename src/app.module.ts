@@ -35,7 +35,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'scrape_frontend', 'build'), // Path to React build folder
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URL),
+    MongooseModule.forRoot(process.env.MONGODB_URL, { dbName: 'Busymotors' }),
     MongooseModule.forFeature([
       { name: CarDetails.name, schema: CarDetailsSchema },  // Car schema
       { name: User.name, schema: UserSchema },
