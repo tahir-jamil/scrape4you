@@ -58,7 +58,6 @@ const PrivacyPolicy: React.FC = () => {
         </p>
         <ul className="mb-4 list-disc list-inside">
           <li>Email: <a href="mailto:salvagemotor4cash@gmail.com" className="text-blue-600">Salvagemotor4cash@gmail.com</a></li>
-          <li>Phone: <a href="tel:+447425106358" className="text-blue-600">+447425106358</a></li>
         </ul>
 
         <p className="text-sm text-gray-500 mt-6">

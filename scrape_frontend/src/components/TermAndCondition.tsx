@@ -62,7 +62,6 @@ const Terms: React.FC = () => {
         <p>If you have any questions about these Terms, please contact us at:</p>
         <ul>
           <li>Email: <a href="mailto:salvagemotor4cash@gmail.com" className="text-blue-600">Salvagemotor4cash@gmail.com</a></li>
-          <li>Phone: <a href="tel:+447425106358" className="text-blue-600">+447425106358</a></li>
         </ul>
 
         <p className="footer-note">
