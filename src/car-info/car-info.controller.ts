@@ -7,6 +7,7 @@ import { S3Service } from './upload-image'; // Import the S3 service
 import { CarDetailsService } from 'src/car-details.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/auth/user.decorator';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 import * as admin from 'firebase-admin';
 
@@ -17,7 +18,9 @@ export class CarInfoController {
   constructor(
     private readonly carInfoService: CarInfoService,
     private readonly carDetailsService: CarDetailsService,
-    private readonly s3Service: S3Service) {
+    private readonly s3Service: S3Service,
+    private readonly notificationsService: NotificationsService,
+  ) {
     this.twilioClient = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
     // Initialize Firebase 
@@ -95,33 +98,57 @@ export class CarInfoController {
 
       // 1. Fetch all agents with FCM tokens
       const nearbyAgents = await this.carDetailsService.fetchAllAgents()
-      const tokens = nearbyAgents.map((agent) => agent.fcm_token);
+      const tokens = nearbyAgents.map((agent) => agent.fcm_token).filter(token => token);
 
-      await admin.messaging().sendEachForMulticast({
-        tokens,
-        notification: {
-          title: 'New Vehicle Near You! 🚗',
-          body: `A ${carDetails.make} ${carDetails.model} was listed nearby.`,
-        },
-        "android": {
-        "notification": {
-          "sound": "notif_sound" // No extension for Android
-        }
-      },
-        "apns": {
-        "payload": {
-          "aps": {
-            "sound": "notif_sound.wav" // Full name with extension for iOS
+      const notificationTitle = 'New Vehicle Near You! 🚗';
+      const notificationBody = `A ${carDetails.make} ${carDetails.model} was listed nearby.`;
+
+      // 2. Send Firebase push notifications
+      if (tokens.length > 0) {
+        await admin.messaging().sendEachForMulticast({
+          tokens,
+          notification: {
+            title: notificationTitle,
+            body: notificationBody,
+          },
+          "android": {
+            "notification": {
+              "sound": "notif_sound"
+            }
+          },
+          "apns": {
+            "payload": {
+              "aps": {
+                "sound": "notif_sound.wav"
+              }
+            }
           }
-        }
+        });
       }
-      });
+
+      // 3. Save notifications to database for each user
+      const userIds = nearbyAgents.map((agent) => agent._id.toString());
+      if (userIds.length > 0) {
+        await this.notificationsService.createNotificationsForUsers(
+          userIds,
+          notificationTitle,
+          notificationBody,
+          'car_listing',
+          { 
+            carId: carDetails.uniqueId,
+            make: carDetails.make,
+            model: carDetails.model,
+          },
+        );
+        console.log(`Saved ${userIds.length} notifications to database`);
+      }
 
       return {
         success: true,
-        message: 'Form submitted successfully and SMS sent.',
+        message: 'Form submitted successfully and notifications sent.',
         carDetails,
-        // smsResponse,
+        notificationsSent: tokens.length,
+        notificationsSaved: userIds.length,
       };
 
     } catch (error) {
@@ -212,6 +239,5 @@ export class CarInfoController {
   async getTotalViews(@Param('_id') carId: string) {
     return this.carDetailsService.getTotalViews(carId);
   }
-
 
 }

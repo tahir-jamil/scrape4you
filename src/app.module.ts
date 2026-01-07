@@ -24,8 +24,10 @@ import { S3Service } from './car-info/upload-image';
 import { StripeModule } from './stripe/stripe.module';
 import { AdminModule } from './admin/admin.module';
 import { Otp, OtpSchema } from './auth/schemas/otp.schema';
+import { Notification, NotificationSchema } from './notifications/notification.schema';
 import { QuotesModule } from './quote/quote.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { NotificationsService } from './notifications/notifications.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,7 +41,8 @@ import { NotificationsModule } from './notifications/notifications.module';
     MongooseModule.forFeature([
       { name: CarDetails.name, schema: CarDetailsSchema },  // Car schema
       { name: User.name, schema: UserSchema },
-      {name: Otp.name, schema: OtpSchema}               // User schema
+      { name: Otp.name, schema: OtpSchema },
+      { name: Notification.name, schema: NotificationSchema },  // Notification schema
     ]),
     
     JwtModule.register({
@@ -54,6 +57,6 @@ import { NotificationsModule } from './notifications/notifications.module';
     NotificationsModule,
   ],
   controllers: [AppController, CarInfoController, AuthController],
-  providers: [AppService, CarInfoService, CarDetailsService, AuthService, UserService, S3Service],
+  providers: [AppService, CarInfoService, CarDetailsService, AuthService, UserService, S3Service, NotificationsService],
 })
 export class AppModule {}
