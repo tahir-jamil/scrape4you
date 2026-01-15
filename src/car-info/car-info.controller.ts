@@ -100,7 +100,7 @@ export class CarInfoController {
       const nearbyAgents = await this.carDetailsService.fetchAllAgents()
       const tokens = nearbyAgents.map((agent) => agent.fcm_token).filter(token => token);
 
-      const notificationTitle = 'New Vehicle Near You! 🚗';
+      const notificationTitle = 'New car available for scrap or salvage based on type near you';
       const notificationBody = `A ${carDetails.make} ${carDetails.model} was listed nearby.`;
 
       // 2. Send Firebase push notifications
