@@ -41,13 +41,12 @@ const VehicleQuoteEditForm: React.FC = () => {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
-  const local_url = 'http://localhost:5000';
-  const prod_url = '';
+  const API_URL = 'https://scrape4you-backend.onrender.com';
 
   useEffect(() => {
     const fetchFormData = async () => {
       try {
-        const response = await fetch(`${prod_url}/car/get-data/${uniqueId}`);
+        const response = await fetch(`${API_URL}/car/get-data/${uniqueId}`);
         const data = await response.json();
 
         if (data) {
@@ -120,7 +119,7 @@ const VehicleQuoteEditForm: React.FC = () => {
     setLoading(true);
 
     try {
-        const response = await fetch(`${prod_url}/car/edit-form/${uniqueId}`, {
+        const response = await fetch(`${API_URL}/car/edit-form/${uniqueId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -158,7 +157,7 @@ const VehicleQuoteEditForm: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${prod_url}/car/delete-data/${uniqueId}`, {
+      const response = await fetch(`${API_URL}/car/delete-data/${uniqueId}`, {
         method: "DELETE",
       });
 
